@@ -1,0 +1,14 @@
+---
+applications:
+- name:    bms-push-sms-sample
+  host:    bms-push-sms-sample
+  memory:  128M
+  buildpack: sdk-for-nodejs
+  instances: 1
+  stack: cflinuxfs2
+  services:
+      - bms-push-notifications
+  env:
+      TWILIO_ACCOUNT_SID: 
+      TWILIO_AUTH_TOKEN:
+      TWILIO_FROM_NUMBER: 

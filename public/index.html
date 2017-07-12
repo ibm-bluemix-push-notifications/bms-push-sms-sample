@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ACME Bank</title>
+
+    <!-- Bootstrap -->
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Welcome to ACME Bank</h1>
+        <div id="mobileNumberInput" class="input-group-lg center-block helloInput">
+            <p class="lead">What is your mobile number?</p>
+            <input id="mobile_number" type="text" class="form-control" placeholder="Mobile number" aria-describedby="sizing-addon1" value="" />
+            <br>
+            <input id="unique_name" type="text" class="form-control" placeholder="Unique name" aria-describedby="sizing-addon1" value="" />
+            <br>
+            <p> <a id="mobileNumberButton" class="btn btn-large btn-primary" href="#">Register</a></p>
+            <p> <a id="mobileNumberUnRegisterButton" class="btn btn-large btn-primary" href="#">Unregister</a></p>
+        </div>
+        <div id="subscriptionInput" class="input-group-lg center-block helloInput">
+            <p class="lead">What would you like to subscribe?</p>
+            <section>
+                <h3 class="tpad">Tags</h3>
+                <input checked data-toggle="toggle" type="checkbox" id="carLoanTag" data-on="Subscribed" data-off="Unsubscribed"> Car Loan </input>
+            </section>
+        </div>
+        <p id="response" class="lead text-center"></p>
+    </div>
+    <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+    <!-- Include all compiled plugins (below), or include individual files as needed -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script>
+
+        $("#carLoanTag").change(function() {
+            
+            if($(this).prop('checked')) {
+                console.log("Subscribe to car loan");
+                $.ajax({url: "/subscribe",
+                    type: "POST",
+                    data: {uniqueName: $('#unique_name').val(), tagName: 'CarLoan'},
+                    success: function(data) {
+                        console.log('Subscribed to tag ' + 'CarLoan');
+                        $('#carLoanTag').data("bs.toggle").on(true);
+                        $('#response').html(data);
+                    },
+                    statusCode: {
+                        404: function(data) {
+                            console.log('Failed to subscribed to tag ' + 'CarLoan');
+                            $('#carLoanTag').data("bs.toggle").off(true);
+                            $('#response').html(data);
+                        }
+                    }
+                });
+            }
+            else {
+                console.log("Unscribe to car loan");
+                $.ajax({url: "/subscribe/" + $('#unique_name').val() + '/' + 'CarLoan',
+                    type: "DELETE",
+                    success: function(data) {
+                        console.log('Unsubscribed');
+                        $('#carLoanTag').data("bs.toggle").off(true);
+                        $('#response').html(data);
+                    }
+                });
+            }
+        });
+
+        $("#mobileNumberButton").click(function(){
+            console.log('mobile Number');
+            $.ajax({url:"/registermobile", 
+            type: 'POST', 
+            data: { 
+                mobileNumber: $('#mobile_number').val(),
+                uniqueId: $('#unique_name').val()
+            },
+            success: function(data) {
+                console.log('Registered');
+                $('#response').html(data);
+                $.ajax({url:"/subscriptions/" + $('#unique_name').val() ,
+                    type: 'GET',
+                    success: function(data) {
+                        var jsonArr = JSON.parse(data);
+                        console.log("The JSON Array of tags is " + data);
+                        var carLoanTagFound = false;
+                        for (var i = 0; i < jsonArr.length; i++) {
+                            if(jsonArr[i] == "CarLoan") {
+                                $('#carLoanTag').data("bs.toggle").on(true);
+                                carLoanTagFound = true;
+                            }
+                        }
+                        if(carLoanTagFound == false) {
+                            $('#carLoanTag').data("bs.toggle").off(true);
+                        }
+                    }
+                });
+            },
+            fail: function() {
+                console.log("Failed");
+                $('#response').html(data);
+            }
+         });
+         return false;
+        });
+
+        $("#mobileNumberUnRegisterButton").click(function(){
+            console.log('mobile Number');
+            $.ajax({url:"/registermobile/" + $('#unique_name').val() , 
+            type: 'DELETE', 
+            success: function(data) {
+                console.log('Unregistered');
+                $('#carLoanTag').data("bs.toggle").off(true);
+                $('#response').html(data);
+            },
+            fail: function() {
+                console.log("Failed");
+                $('#response').html(data);
+            }
+         });
+         return false;
+        });
+    </script>
+</body>
+
+</html>
