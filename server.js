@@ -1,3 +1,6 @@
+
+var basicAuth = require('express-basic-auth')
+
 var express = require("express"),
     app = express();
 
@@ -10,8 +13,13 @@ var push = require("./lib/push.js"),
     getSubscriptions = push.getSubscriptions;
     subcribeToTag = push.subcribeToTag;
     unSubcribeToTag = push.unSubcribeToTag;
+    reportMessage = push.reportMessage;
 
 var bodyParser = require('body-parser');
+
+app.use(basicAuth({
+    users: { 'admin': 'admin' }
+}));
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
@@ -37,12 +45,17 @@ app.post('/registermobile', function(request, response) {
 app.post('/send', function(request, response) {
     console.log("Send message to mobile " + request.body.properties.id);
     console.log("Send the alert " + request.body.alert);
+    console.log("Device Id is " + request.body.deviceId);
+    var payload = JSON.parse(request.body.payload);
+    console.log("The notification Id is " + payload.nid);
+
+    reportMessage(request.body.deviceId, payload.nid, 'SEEN', function(){}, function(){});
     twilioClient.messages.create({
             body: request.body.alert,
             to: request.body.properties.id,
             from: process.env.TWILIO_FROM_NUMBER
         })
-        .then((message) => console.log(message.sid));
+        .then((message) => {console.log(message.sid); reportMessage(request.body.deviceId, payload.nid, 'OPEN', function(){}, function(){});});
     response.end();
 });
 

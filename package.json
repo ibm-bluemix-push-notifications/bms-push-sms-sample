@@ -11,7 +11,8 @@
     "body-parser": "*",
     "vcap_services": "*",
     "twilio": "*",
-    "url": "*"
+    "url": "*",
+    "express-basic-auth": "*"
   },
   "main": "server.js",
   "scripts": {
