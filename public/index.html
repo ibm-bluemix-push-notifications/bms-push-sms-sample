@@ -48,6 +48,9 @@
                 $.ajax({url: "/subscribe",
                     type: "POST",
                     data: {uniqueName: $('#unique_name').val(), tagName: 'CarLoan'},
+                    beforeSend: function (xhr) {
+                       xhr.setRequestHeader('Authorization', 'Basic ' + btoa('admin:admin'));
+                    },
                     success: function(data) {
                         console.log('Subscribed to tag ' + 'CarLoan');
                         $('#carLoanTag').data("bs.toggle").on(true);
@@ -66,6 +69,9 @@
                 console.log("Unscribe to car loan");
                 $.ajax({url: "/subscribe/" + $('#unique_name').val() + '/' + 'CarLoan',
                     type: "DELETE",
+                    beforeSend: function (xhr) {
+                       xhr.setRequestHeader('Authorization', 'Basic ' + btoa('admin:admin'));
+                    },
                     success: function(data) {
                         console.log('Unsubscribed');
                         $('#carLoanTag').data("bs.toggle").off(true);
@@ -83,11 +89,17 @@
                 mobileNumber: $('#mobile_number').val(),
                 uniqueId: $('#unique_name').val()
             },
+            beforeSend: function (xhr) {
+                 xhr.setRequestHeader('Authorization', 'Basic ' + btoa('admin:admin'));
+            },
             success: function(data) {
                 console.log('Registered');
                 $('#response').html(data);
                 $.ajax({url:"/subscriptions/" + $('#unique_name').val() ,
                     type: 'GET',
+                    beforeSend: function (xhr) {
+                       xhr.setRequestHeader('Authorization', 'Basic ' + btoa('admin:admin'));
+                    },
                     success: function(data) {
                         var jsonArr = JSON.parse(data);
                         console.log("The JSON Array of tags is " + data);
@@ -115,7 +127,10 @@
         $("#mobileNumberUnRegisterButton").click(function(){
             console.log('mobile Number');
             $.ajax({url:"/registermobile/" + $('#unique_name').val() , 
-            type: 'DELETE', 
+            type: 'DELETE',
+            beforeSend: function (xhr) {
+                       xhr.setRequestHeader('Authorization', 'Basic ' + btoa('admin:admin'));
+                    },
             success: function(data) {
                 console.log('Unregistered');
                 $('#carLoanTag').data("bs.toggle").off(true);

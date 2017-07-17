@@ -17,15 +17,15 @@ var push = require("./lib/push.js"),
 
 var bodyParser = require('body-parser');
 
-app.use(basicAuth({
-    users: { 'admin': 'admin' }
-}));
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded());
 var port = process.env.PORT || 8080;
 
 app.use(express.static(__dirname + '/public'));
+
+app.use(basicAuth({
+    users: { 'admin': 'admin' }
+}));
 
 app.post('/registermobile', function(request, response) {
     console.log('Request to register a mobile number ' + request.body.mobileNumber);
