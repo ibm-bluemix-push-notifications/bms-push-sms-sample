@@ -17,9 +17,8 @@ Create or login to your bluemix account and create an instance of push with the 
 * Do a "cf push" in the sample's root folder
 
 ## Configure Push Service with the sample
-* Open the Push Notification service instance or use the REST API of Push and add the HTTP configuration to point to the bluemix app you uploaded in the previous step. For example the end point will be "http://bms-push-sms-sample.bluemix.net"
+* Open the Push Notification service instance or use the REST API of Push and add the HTTP configuration to point to the bluemix app you uploaded in the previous step. For example the end point will be "http://bms-push-sms-sample.bluemix.net/send". The "/send" is the path on which the node application is configured for POST.
 * Also create a tag in Push names "CarLoan".
-* Now open the sample UI of the node application and input the mobile number and a unique name for the mobile number and hit "Register" button
+* Now open the URL of the node application and input the mobile number and a unique name for the mobile number and hit "Register" button. The unique name is used as a deviceId for the registering.
 * Now send the message using the Push Notification service dashboard or the Push Notification Service REST API targetting the device, platform or tag name.
 * You will see an sms on your mobile.
-
