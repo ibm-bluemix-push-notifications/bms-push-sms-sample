@@ -10,5 +10,6 @@ applications:
       - bms-push-notifications
   env:
       TWILIO_ACCOUNT_SID: 
-      TWILIO_AUTH_TOKEN:
+      TWILIO_AUTH_TOKEN: 
       TWILIO_FROM_NUMBER: 
+      IMFPUSH: imfpush

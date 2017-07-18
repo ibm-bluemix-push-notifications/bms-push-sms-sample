@@ -43,7 +43,7 @@ app.post('/registermobile', function(request, response) {
 });
 
 app.post('/send', function(request, response) {
-    console.log("Send message to mobile " + request.body.properties.id);
+    console.log("Send message to mobile " + request.body.attributes.id);
     console.log("Send the alert " + request.body.alert);
     console.log("Device Id is " + request.body.deviceId);
     var payload = JSON.parse(request.body.payload);
@@ -52,7 +52,7 @@ app.post('/send', function(request, response) {
     reportMessage(request.body.deviceId, payload.nid, 'SEEN', function(){}, function(){});
     twilioClient.messages.create({
             body: request.body.alert,
-            to: request.body.properties.id,
+            to: request.body.attributes.id,
             from: process.env.TWILIO_FROM_NUMBER
         })
         .then((message) => {console.log(message.sid); reportMessage(request.body.deviceId, payload.nid, 'OPEN', function(){}, function(){});});
